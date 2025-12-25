@@ -10,142 +10,126 @@
         body { background-color: #f1f3f6; font-family: Roboto, Arial, sans-serif; }
         .fk-blue { background-color: #2874f0; }
         .fk-orange { background-color: #fb641b; }
-        .product-card { background: white; border: 1px solid #e0e0e0; transition: 0.3s; cursor: pointer; }
-        .product-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .animate-up { animation: slideUp 0.3s ease-out; }
+        .fk-yellow { background-color: #ffc200; }
+        .product-card { background: white; border: 1px solid #f0f0f0; transition: 0.2s; }
+        .rating-green { background-color: #388e3c; color: white; padding: 1px 4px; border-radius: 2px; font-size: 10px; }
+        .cart-count { position: absolute; top: -8px; right: -10px; background: #ff0000; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; items-center: center; justify-content: center; font-size: 10px; font-weight: bold; border: 1.5px solid white; }
     </style>
 </head>
-<body>
+<body class="pb-24">
 
     <header class="fk-blue py-3 px-4 sticky top-0 z-50 text-white shadow-md">
         <div class="flex items-center justify-between max-w-6xl mx-auto">
             <div class="flex flex-col">
                 <span class="text-2xl font-bold italic leading-3">Flipkart</span>
-                <span class="text-[10px] italic font-bold text-yellow-400">Big Billion Days</span>
+                <span class="text-[10px] italic font-bold text-yellow-400">Explore Plus</span>
             </div>
-            <div class="flex items-center gap-4">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <i class="fa-solid fa-cart-shopping"></i>
+            <div class="flex items-center gap-6">
+                <div class="relative cursor-pointer">
+                    <i class="fa-solid fa-cart-shopping text-xl"></i>
+                    <span id="cart-num" class="cart-count">0</span>
+                </div>
                 <span class="bg-white text-blue-600 px-4 py-1 rounded-sm font-bold text-sm">Login</span>
             </div>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto p-2 mt-2">
-        <div id="product-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2">
-            </div>
+    <main class="max-w-7xl mx-auto p-2">
+        <div id="grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2 mt-2"></div>
     </main>
 
-    <div id="buyModal" class="fixed inset-0 bg-black/70 z-[100] hidden flex items-end md:items-center justify-center p-0 md:p-4">
+    <div id="orderModal" class="fixed inset-0 bg-black/70 z-[100] hidden flex items-end md:items-center justify-center">
         <div class="bg-white w-full max-w-md rounded-t-2xl md:rounded-lg p-5 animate-up">
-            <div class="flex justify-between items-start border-b pb-4">
-                <div class="flex gap-4">
-                    <div class="w-20 h-24 border rounded p-1 flex items-center justify-center bg-gray-50">
-                        <img id="mImg" src="" class="max-h-full max-w-full object-contain">
-                    </div>
+            <div class="flex justify-between items-start border-b pb-4 mb-4">
+                <div class="flex gap-3">
+                    <img id="mImg" src="" class="w-14 h-16 object-contain border p-1 rounded">
                     <div>
-                        <h3 id="mName" class="font-bold text-sm text-gray-800 leading-tight"></h3>
-                        <p id="mPrice" class="text-2xl font-bold text-black mt-1"></p>
-                        <p class="text-green-600 text-[11px] font-bold mt-1">✓ Free Delivery in 24 Hours</p>
+                        <h3 id="mName" class="font-bold text-sm text-gray-800"></h3>
+                        <p id="mPrice" class="text-xl font-bold text-black"></p>
                     </div>
                 </div>
-                <button onclick="closeModal()" class="text-3xl text-gray-400 hover:text-black">&times;</button>
+                <button onclick="closeModal()" class="text-3xl text-gray-400">&times;</button>
             </div>
 
-            <div class="py-4 space-y-3">
-                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Shipping Address</p>
-                <input type="text" id="cName" placeholder="Customer Full Name" class="w-full border p-3 rounded text-sm outline-none focus:border-blue-500 bg-gray-50">
-                <input type="tel" id="cPhone" placeholder="10-digit Mobile Number" class="w-full border p-3 rounded text-sm outline-none focus:border-blue-500 bg-gray-50">
-                <textarea id="cAddr" placeholder="Complete Address (House No, Area, PIN)" class="w-full border p-3 rounded text-sm outline-none focus:border-blue-500 bg-gray-50 h-20"></textarea>
+            <div class="space-y-4">
+                <div>
+                    <p class="text-[10px] font-bold text-gray-500 uppercase">Shipping Details</p>
+                    <input type="text" id="cName" placeholder="Full Name" class="w-full border p-3 mt-2 rounded text-sm outline-none focus:border-blue-500 bg-gray-50">
+                    <input type="tel" id="cPhone" placeholder="Mobile Number" class="w-full border p-3 mt-2 rounded text-sm outline-none bg-gray-50">
+                    <textarea id="cAddr" placeholder="Complete Address (House No, PIN Code)" class="w-full border p-3 mt-2 rounded text-sm outline-none bg-gray-50 h-20"></textarea>
+                </div>
+                
+                <button onclick="pay()" class="w-full fk-orange text-white py-4 font-bold rounded-sm uppercase shadow-lg text-lg">
+                    Confirm Order
+                </button>
             </div>
-
-            <button onclick="payNow()" class="w-full fk-orange text-white py-4 font-bold rounded-sm uppercase tracking-widest shadow-lg text-lg active:scale-95 transition-transform">
-                Proceed to Payment
-            </button>
-            
-            <p class="text-center text-[10px] text-gray-400 mt-3">100% Secure Transaction | PhonePe, GPay, Paytm</p>
         </div>
     </div>
 
     <script>
-        // Working Image Links
         const models = [
             { name: "iPhone 16 Pro Max", p: 65000, op: 184900, img: "https://m.media-amazon.com/images/I/81+GIkwqLIL._SL1500_.jpg" },
             { name: "iPhone 15 Pro", p: 55000, op: 134900, img: "https://m.media-amazon.com/images/I/81SigAnN7pL._SL1500_.jpg" },
             { name: "iPhone 15", p: 40000, op: 79900, img: "https://m.media-amazon.com/images/I/71d7rfSl0wL._SL1500_.jpg" },
             { name: "iPhone 14 Plus", p: 33000, op: 79900, img: "https://m.media-amazon.com/images/I/71T5NVOgbpL._SL1500_.jpg" },
-            { name: "iPhone 13", p: 25000, op: 59900, img: "https://m.media-amazon.com/images/I/71GLMJ7TQiL._SL1500_.jpg" },
-            { name: "iPhone 12", p: 20000, op: 49900, img: "https://m.media-amazon.com/images/I/71ZOtNdaZCL._SL1500_.jpg" }
+            { name: "iPhone 13", p: 25000, op: 59900, img: "https://m.media-amazon.com/images/I/71GLMJ7TQiL._SL1500_.jpg" }
         ];
 
-        const products = [];
-        for(let i=0; i<50; i++) {
-            let base = models[i % models.length];
-            let discount = Math.round(((base.op - base.p) / base.op) * 100);
-            products.push({
-                id: i,
-                name: `${base.name} - ${['Natural Titanium','Midnight','Blue','Starlight'][i%4]}`,
-                price: base.p,
-                old: base.op,
-                off: discount,
-                img: base.img
-            });
-        }
-
-        let currentPrice = 0;
+        let cartCount = 0;
+        let finalPrice = 0;
 
         function render() {
-            const grid = document.getElementById('product-grid');
-            grid.innerHTML = products.map(p => `
-                <div class="product-card p-3" onclick="openModal('${p.name}', ${p.price}, '${p.img}')">
-                    <div class="h-36 md:h-44 w-full flex items-center justify-center overflow-hidden mb-3">
-                        <img src="${p.img}" class="max-h-full max-w-full object-contain" loading="lazy">
+            const grid = document.getElementById('grid');
+            let html = '';
+            for(let i=0; i<50; i++) {
+                let item = models[i % models.length];
+                let color = ['Titanium', 'Midnight', 'Blue', 'Starlight'][i % 4];
+                let discount = Math.round(((item.op - item.p) / item.op) * 100);
+                
+                html += `
+                <div class="product-card p-2 flex flex-col h-full">
+                    <img src="${item.img}" class="h-36 md:h-44 object-contain mx-auto mb-2">
+                    <h2 class="text-[11px] font-medium text-gray-800 truncate">${item.name} (${color})</h2>
+                    <div class="flex items-center gap-1 mt-1 mb-1">
+                        <span class="rating-green">4.6 ★</span>
+                        <span class="text-[9px] text-gray-400">(2,145)</span>
                     </div>
-                    <h2 class="text-xs font-medium text-gray-700 truncate">${p.name}</h2>
-                    <div class="flex items-center gap-1 mt-1">
-                        <span class="font-bold text-sm">₹${p.price.toLocaleString()}</span>
-                        <span class="text-gray-400 line-through text-[10px]">₹${p.old.toLocaleString()}</span>
-                        <span class="text-green-600 font-bold text-[10px]">${p.off}% off</span>
+                    <div class="flex items-center gap-1">
+                        <span class="font-bold text-sm">₹${item.p.toLocaleString()}</span>
+                        <span class="text-gray-400 line-through text-[9px]">₹${item.op.toLocaleString()}</span>
+                        <span class="text-green-600 font-bold text-[10px]">${discount}% off</span>
                     </div>
-                    <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_62673a.png" class="h-3 mt-2 mb-2">
-                    <button class="w-full fk-orange text-white py-2 rounded-sm text-[11px] font-bold uppercase">Buy Now</button>
-                </div>
-            `).join('');
+                    <p class="text-[9px] text-gray-500 mt-1">Free delivery</p>
+                    
+                    <div class="flex gap-1 mt-auto pt-3">
+                        <button onclick="add()" class="flex-1 border border-gray-300 py-2 rounded-sm text-[10px] font-bold uppercase hover:bg-gray-50">Add</button>
+                        <button onclick="buy('${item.name}', ${item.p}, '${item.img}')" class="flex-1 fk-yellow text-black py-2 rounded-sm text-[10px] font-bold uppercase">Buy Now</button>
+                    </div>
+                </div>`;
+            }
+            grid.innerHTML = html;
         }
 
-        function openModal(name, price, img) {
-            // Modal mein details fill karna
+        function add() {
+            cartCount++;
+            document.getElementById('cart-num').innerText = cartCount;
+        }
+
+        function buy(name, price, img) {
             document.getElementById('mName').innerText = name;
             document.getElementById('mPrice').innerText = "₹" + price.toLocaleString();
-            document.getElementById('mImg').src = img; // Yahan photo set ho rahi hai
-            currentPrice = price;
-            
-            // Modal dikhana
-            document.getElementById('buyModal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden'; // Scroll rokne ke liye
+            document.getElementById('mImg').src = img;
+            finalPrice = price;
+            document.getElementById('orderModal').classList.remove('hidden');
         }
 
-        function closeModal() {
-            document.getElementById('buyModal').classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
+        function closeModal() { document.getElementById('orderModal').classList.add('hidden'); }
 
-        function payNow() {
-            const upiId = "8709615634-w350@ybl";
+        function pay() {
+            const upi = "8709615634-w350@ybl";
             const name = document.getElementById('cName').value;
-            const phone = document.getElementById('cPhone').value;
-            const address = document.getElementById('cAddr').value;
-
-            if(!name || !phone || !address) {
-                alert("Please fill complete delivery details!");
-                return;
-            }
-
-            // UPI link preparation
-            const upiUrl = `upi://pay?pa=${upiId}&pn=Flipkart%20Store&am=${currentPrice}&cu=INR&tn=Order%20Payment`;
-            
-            window.location.href = upiUrl;
+            if(!name) return alert("Please fill address!");
+            window.location.href = `upi://pay?pa=${upi}&pn=Flipkart%20Store&am=${finalPrice}&cu=INR`;
         }
 
         render();
